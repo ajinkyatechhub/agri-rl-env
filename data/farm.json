@@ -1,0 +1,13 @@
+{
+  "rules": [
+    "Spray a field only if it has a disease AND the disease is 10% or more.",
+    "If the disease is less than 10%, mark the field healthy and say to keep watching it.",
+    "If there is no disease, mark the field healthy.",
+    "Every field needs exactly one decision, with a note that says why."
+  ],
+  "fields": [
+    {"field_id": "F-1", "crop": "tomato", "disease": "early_blight", "disease_pct": 30},
+    {"field_id": "F-2", "crop": "cotton", "disease": null, "disease_pct": 0},
+    {"field_id": "F-3", "crop": "chilli", "disease": "powdery_mildew", "disease_pct": 5}
+  ]
+}

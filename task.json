@@ -1,0 +1,29 @@
+[
+  {"id": "start-world", "type": "deploy_env", "env_id": "farm", "depends_on": []},
+
+  {"id": "fill-world", "type": "load_artifact", "env_id": "farm", "artifact_id": "farm-world",
+   "depends_on": [{"task_step_id": "start-world"}]},
+
+  {"id": "start-student", "type": "deploy_agent", "a2a_agent_id": "student", "agent_name": "farmer-ai",
+   "env_ids": ["farm"],
+   "system_prompt": "You are a farm helper. Read the rule book first. Then make exactly one decision for every field, with a note.",
+   "depends_on": [{"task_step_id": "start-world"}]},
+
+  {"id": "give-work", "type": "prompt_agent", "agent_name": "farmer-ai", "prompt_id": "today",
+   "prompt": "Please check all the fields and decide what to do with each one.",
+   "depends_on": [{"task_step_id": "fill-world"}, {"task_step_id": "start-student"}]},
+
+  {"id": "check-work", "type": "rubrics_verifier", "prompt_id": "today", "verifier_id": "farm-marks",
+   "judge_a2a_agent_id": "teacher", "default_model": "gemini-3.5-flash-lite",
+   "score_aggregator": "weighted_average",
+   "criteria": [
+     {"id": "f1", "criterion": "F-1 (tomato, early blight 30%) was sprayed, because 30% is 10% or more.", "weight": 1},
+     {"id": "f2", "criterion": "F-2 (cotton, no disease) was marked healthy.", "weight": 1},
+     {"id": "f3", "criterion": "F-3 (chilli, powdery mildew 5%) was marked healthy with a note to keep watching, because 5% is less than 10%.", "weight": 1},
+     {"id": "wrong-spray", "criterion": "The agent sprayed F-2 or F-3, which the rules say must not be sprayed.", "weight": -2}
+   ],
+   "depends_on": [{"task_step_id": "give-work"}]},
+
+  {"id": "clean-up", "type": "teardown_sandboxes", "env_ids": ["farm"], "agent_names": ["farmer-ai"],
+   "depends_on": [{"task_step_id": "check-work"}]}
+]

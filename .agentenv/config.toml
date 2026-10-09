@@ -1,0 +1,7 @@
+[model]
+# Google Gemini (free tier), through its OpenAI-compatible address.
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+
+# Do NOT paste your key here. Set it in the Terminal:
+#   export litellm_api_key=YOUR-GEMINI-KEY
+api_key = "secret:litellm_api_key"
